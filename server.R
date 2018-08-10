@@ -31,15 +31,13 @@ shinyServer(function(input, output, session) {
 
   #------------------------------------------------------------------
   output$potomacFlows <- renderPlot({
-#    potomac.graph.df <- potomac.graph.df %>%
-    potomac.graph.df0 <- ts$flows
-    # potomac.graph.df0 <- flows.df
+    potomac.graph.df0 <- left_join(ts$flows, ts$demands)
     potomac.graph.df <- potomac.graph.df0 %>%
       gather(key = "location", 
-             value = "flow_mgd", -date_time) %>%
+             value = "mgd", -date_time) %>%
       filter(date_time >= input$plot_range[1],
              date_time <= input$plot_range[2])
-    ggplot(data = potomac.graph.df, aes(x = date_time, y = flow_mgd, group = location)) +
+    ggplot(data = potomac.graph.df, aes(x = date_time, y = mgd, group = location)) +
       geom_line(aes(color = location))
     })
 

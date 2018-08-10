@@ -37,9 +37,15 @@ sim_main_func <- function(date_today, ts){
   df1 <- ts$flows
   df2 <- ts$demands
   date_first <- last(df1$date_time)
+  #
   flows.added <- flows.data.df %>%
     filter(date_time > date_first, date_time <= date_today)
   ts$flows <- rbind(df1, flows.added)
+  #
+  demands.added <- demands.data.df %>%
+    filter(date_time > date_first, date_time <= date_today)
+  ts$demands <- rbind(df2, demands.added)
+  #
   return(ts)
 }
 #
@@ -48,9 +54,15 @@ sim_add_func <- function(added_days, ts){
   df1 <- ts$flows
   df2 <- ts$demands
   date_first <- last(df1$date_time)
+  #
   flows.added <- flows.data.df %>%
     filter(date_time > date_first, date_time <= date_first + added_days)
   ts$flows <- rbind(df1, flows.added)
+  #
+  demands.added <- demands.data.df %>%
+    filter(date_time > date_first, date_time <= date_first + added_days)
+  ts$demands <- rbind(df2, demands.added)
+  #
   return(ts)
 }
 
