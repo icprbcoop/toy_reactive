@@ -18,10 +18,6 @@ demands.data.df <- demands.daily.df %>%
   filter(date_time < data_date_end, date_time >= date_start) %>%
   select(date_time, demands = demands_total_unrestricted)
 
-# date_today <- input$DREXtoday - this doesn't work
-# sim_n <- as.numeric(as.POSIXct(date_today) - as.POSIXct(date_start),
-#                     units = "days")
-# 
 #--------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------
 # Main program - run the daily simulation
@@ -33,27 +29,36 @@ flows.df0 <- flows.data.df %>%
   filter(date_time < date_start + 10)
 demands.df0 <- demands.data.df %>%
   filter(date_time < date_start + 10)
+# Package the two initialized dataframes into a list:
 ts0 <- list(flows = flows.df0, demands = demands.df0)
 #
 # This takes the initialized flow df and adds data up thru today
-sim_main_func <- function(date_today, flows.df0){
-  date_first <- last(flows.df0$date_time)
+sim_main_func <- function(date_today, ts){
+  # df1 <- ts$flows
+  # df2 <- ts$demands
+  df1 <- ts[[1]]
+  df2 <- ts[[2]]
+  date_first <- last(df1$date_time)
   flows.added <- flows.data.df %>%
     filter(date_time > date_first, date_time <= date_today)
-  temp <- rbind(flows.df0, flows.added)
+  temp <- rbind(df1, flows.added)
   return(temp)
 }
 #
 # This adds another chunk of data
-sim_add_func <- function(added_days, flows.df){
-  date_first <- last(flows.df$date_time)
+sim_add_func <- function(added_days, ts){
+  # df1 <- ts$flows
+  # df2 <- ts$demands
+  df1 <- ts[[1]]
+  df2 <- ts[[2]]
+  date_first <- last(df1$date_time)
   flows.added <- flows.data.df %>%
     filter(date_time > date_first, date_time <= date_first + added_days)
-  temp <- rbind(flows.df, flows.added)
+  temp <- rbind(df1, flows.added)
   return(temp)
 }
 
-flows.df <- sim_main_func(date_today, flows.df0)
+flows.df <- sim_main_func(date_today, ts0)
 
 #
 # *************************************************

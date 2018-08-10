@@ -15,15 +15,13 @@ shinyServer(function(input, output, session) {
   ts$demands <- demands.df0
   #
   observeEvent(input$run_main, {
-     ts$flows <- sim_main_func(input$DREXtoday, flows.df0)
-   })
+    # ts$flows <- sim_main_func(input$DREXtoday, ts0$flows)
+    ts <- sim_main_func(input$DREXtoday, ts0)
+  })
   #
-  # observeEvent(input$run_main, {
-  #   ts$flows <- sim_main_func(input$DREXtoday, ts0$flows)
-  # })
-  # #
   observeEvent(input$run_add, {
-    ts$flows <- sim_add_func(input$chunkofdays, ts$flows)
+    # ts$flows <- sim_add_func(input$chunkofdays, ts$flows)
+    ts <- sim_add_func(input$chunkofdays, ts)
   })
 
   #------------------------------------------------------------------
