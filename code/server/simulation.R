@@ -8,7 +8,7 @@
 # We want to simulate up to date_today, and see things graphed
 #   up thru date_today + (not yet implemented) some forecasts (fcs) 
 #   up thru some period - maybe 15 days out into the future?
-date_today <- as.Date("1930-04-01") # later to be reactive
+date_today <- as.Date("1930-02-01") # later to be reactive
 #--------------------------------------------------------------------------------
 flows.data.df <- flows.daily.mgd.df %>%
   filter(date_time < data_date_end, date_time >= date_start) %>%
@@ -32,33 +32,27 @@ demands.df0 <- demands.data.df %>%
 # Package the two initialized dataframes into a list:
 ts0 <- list(flows = flows.df0, demands = demands.df0)
 #
-# This takes the initialized flow df and adds data up thru today
+# This takes the initialized dfs and adds data up thru today
 sim_main_func <- function(date_today, ts){
-  # df1 <- ts$flows
-  # df2 <- ts$demands
-  df1 <- ts[[1]]
-  df2 <- ts[[2]]
+  df1 <- ts$flows
+  df2 <- ts$demands
   date_first <- last(df1$date_time)
   flows.added <- flows.data.df %>%
     filter(date_time > date_first, date_time <= date_today)
-  temp <- rbind(df1, flows.added)
-  return(temp)
+  ts$flows <- rbind(df1, flows.added)
+  return(ts)
 }
 #
 # This adds another chunk of data
 sim_add_func <- function(added_days, ts){
-  # df1 <- ts$flows
-  # df2 <- ts$demands
-  df1 <- ts[[1]]
-  df2 <- ts[[2]]
+  df1 <- ts$flows
+  df2 <- ts$demands
   date_first <- last(df1$date_time)
   flows.added <- flows.data.df %>%
     filter(date_time > date_first, date_time <= date_first + added_days)
-  temp <- rbind(df1, flows.added)
-  return(temp)
+  ts$flows <- rbind(df1, flows.added)
+  return(ts)
 }
-
-flows.df <- sim_main_func(date_today, ts0)
 
 #
 # *************************************************

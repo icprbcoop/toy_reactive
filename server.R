@@ -8,26 +8,32 @@ shinyServer(function(input, output, session) {
   #------------------------------------------------------------------
   # Create the graphs etc to be displayed by the Shiny app
   #------------------------------------------------------------------
-   
+  #
+  # date_start is currently hard-coded to be "2018-02-01"
+  # First run doesn't have reactive inputs
+  # This will display without pressing any buttons
+  ts <- sim_main_func(date_start + 15, ts0)
+  #  
+  # Now make ts reactive
   ts <- reactiveValues()
   # This doesn't work unless I initialize ts
   ts$flows <- flows.df0
   ts$demands <- demands.df0
   #
   observeEvent(input$run_main, {
-    # ts$flows <- sim_main_func(input$DREXtoday, ts0$flows)
-    ts <- sim_main_func(input$DREXtoday, ts0)
+    ts <- sim_main_func(input$DREXtoday, ts)
   })
   #
   observeEvent(input$run_add, {
-    # ts$flows <- sim_add_func(input$chunkofdays, ts$flows)
     ts <- sim_add_func(input$chunkofdays, ts)
   })
+  
 
   #------------------------------------------------------------------
   output$potomacFlows <- renderPlot({
 #    potomac.graph.df <- potomac.graph.df %>%
     potomac.graph.df0 <- ts$flows
+    # potomac.graph.df0 <- flows.df
     potomac.graph.df <- potomac.graph.df0 %>%
       gather(key = "location", 
              value = "flow_mgd", -date_time) %>%
