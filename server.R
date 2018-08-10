@@ -12,11 +12,16 @@ shinyServer(function(input, output, session) {
   ts <- reactiveValues()
   # This doesn't work unless I initialize ts
   ts$flows <- flows.df0
+  ts$demands <- demamds.df0
   #
   observeEvent(input$run_main, {
      ts$flows <- sim_main_func(input$DREXtoday, flows.df0)
    })
   #
+  # observeEvent(input$run_main, {
+  #   ts$flows <- sim_main_func(input$DREXtoday, ts0$flows)
+  # })
+  # #
   observeEvent(input$run_add, {
     ts$flows <- sim_add_func(input$chunkofdays, ts$flows)
   })

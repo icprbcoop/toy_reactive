@@ -31,6 +31,9 @@ demands.data.df <- demands.daily.df %>%
 # Define an initial dataframe
 flows.df0 <- flows.data.df %>%
   filter(date_time < date_start + 10)
+demands.df0 <- demands.data.df %>%
+  filter(date_time < date_start + 10)
+ts0 <- list(flows = flows.df0, demands = demands.df0)
 #
 # This takes the initialized flow df and adds data up thru today
 sim_main_func <- function(date_today, flows.df0){
