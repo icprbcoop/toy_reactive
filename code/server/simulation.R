@@ -34,8 +34,8 @@ ts0 <- list(flows = flows.df0, demands = demands.df0)
 #
 # This takes the initialized dfs and adds data up thru today
 sim_main_func <- function(date_today, ts){
-  df1 <- ts$flows
-  df2 <- ts$demands
+  df1 <- ts0$flows
+  df2 <- ts0$demands
   date_first <- last(df1$date_time)
   #
   flows.added <- flows.data.df %>%

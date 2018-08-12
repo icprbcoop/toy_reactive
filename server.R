@@ -12,7 +12,7 @@ shinyServer(function(input, output, session) {
   # date_start is currently hard-coded to be "2018-02-01"
   # First run doesn't have reactive inputs
   # This will display without pressing any buttons
-  ts <- sim_main_func(date_start + 15, ts0)
+  # ts <- sim_main_func(date_start + 15, ts0)
   #  
   # Now make ts reactive
   ts <- reactiveValues()
@@ -40,9 +40,16 @@ shinyServer(function(input, output, session) {
     ggplot(data = potomac.graph.df, aes(x = date_time, y = mgd, group = location)) +
       geom_line(aes(color = location))
     })
-
   #
-
+  output$por_flow <- renderValueBox({
+    por_threshold <- 2000
+    por_flow <- last(round(ts$flows$por_nat))
+    valueBox(
+      value = por_flow,
+      subtitle = "Flow at Point of Rocks, cfs (Trigger for daily monitoring is 2000 cfs)",
+      color = if (por_flow >= por_threshold) "green" else "yellow"
+    )
+  })
   #
 
 
